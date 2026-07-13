@@ -27,9 +27,4 @@ class Settings(BaseSettings):
         )
 
 
-settings = Settings(POSTGRES_DB="internet_shop", 
-                    POSTGRES_USER="postgres", 
-                    POSTGRES_PASSWORD="postgres", 
-                    POSTGRES_HOST="localhost",
-                    POSTGRES_PORT=5432,
-                    SECRET_KEY="KvW3EdQQlb87WFEhSYRYb3DabK8EseU_iASBjQDs1HY")
+settings = Settings() # type: ignore
