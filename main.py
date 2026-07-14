@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from sqlalchemy import text
 
+from app.core.logger import logger
 from app.db.database import AsyncSessionLocal
 
 import uvicorn
@@ -9,18 +10,24 @@ import uvicorn
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    logger.info("Starting application...")
+
     async with AsyncSessionLocal() as session:
         await session.execute(text("SELECT 1"))
-        print("Postgres connected!")
+        logger.info("Connected to PostgreSQL")
+    
+    logger.info("Application startup completed")
     yield
+    logger.info("Application stopped")
 
 
 app = FastAPI(lifespan=lifespan)
 
 
-@app.get("/")
-def starter_page() -> str:
-    return "Welcome!"
+@app.get("/", summary="Start page")
+def starter_page() -> dict[str, str]:
+    logger.info("GET /")
+    return {"success" : "true"}
 
 
 if __name__ == "__main__":
