@@ -1,17 +1,18 @@
-# Логи
-logs/
-*.log
 
 
+# Виртуальное окружение
+.venv/
+
+# Кеш Python
+__pycache__/
+*.pyc
+
+# Переменные окружения (секреты!)
 .env
 
-# Python-generated files
-__pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
+# Логи
+logs/
 
-# Virtual environments
-.venv
+# IDE
+.vscode/
+.idea/
