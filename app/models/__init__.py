@@ -1,4 +1,4 @@
-from app.models.category import Category
+from app.models.categoryModels import Category
 
 
 __all__ = (
