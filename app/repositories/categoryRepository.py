@@ -1,13 +1,19 @@
+from typing import List, Optional
+
 from app.models.categoryModels import CategoryModel
+from app.db.database import AsyncSession
 
 
-class CategoryRepository():
+class CategoryRepository:
 
-    def get_categories(self, CategoryModel):
+    def __init__(self, session:AsyncSession):
+        ...
+
+    async def get_categories(self) -> List[CategoryModel]:
         ...
     
-    def add_category(self, CategoryModel):
+    async def add_category(self, name:str) -> CategoryModel:
         ...
     
-    def delete_category(self, CategoryModel):
+    async def delete_category(self, id:int) -> Optional[CategoryModel]:
         ...
