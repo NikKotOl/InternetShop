@@ -4,6 +4,7 @@ from sqlalchemy import text
 
 from app.core.logger import logger
 from app.db.database import AsyncSessionLocal
+from app.api.categoryAPI import router as categoryRouter
 
 import uvicorn
 
@@ -28,6 +29,9 @@ app = FastAPI(lifespan=lifespan)
 def starter_page() -> dict[str, str]:
     logger.info("GET /")
     return {"success" : "true"}
+
+
+app.include_router(categoryRouter)
 
 
 if __name__ == "__main__":

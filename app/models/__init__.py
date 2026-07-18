@@ -1,6 +1,6 @@
-from app.models.categoryModels import Category
+from app.models.categoryModels import CategoryModel
 
 
 __all__ = (
-    "Category",
+    "CategoryModel",
 )
