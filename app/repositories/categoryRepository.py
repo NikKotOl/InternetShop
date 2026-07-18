@@ -1,6 +1,6 @@
 from typing import Optional, Sequence
 
-from app.models.categoryModels import CategoryModel
+from app.models.categoryModel import CategoryModel
 from app.db.database import AsyncSession
 
 from sqlalchemy import select
@@ -35,5 +35,4 @@ class CategoryRepository:
             return None
         
     async def get_category_by_id(self, id: int) -> Optional[CategoryModel]:
-        category = await self.session.get(CategoryModel, id)
-        return category
+        return await self.session.get(CategoryModel, id)
