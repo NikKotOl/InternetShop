@@ -1,11 +1,11 @@
 from pydantic import BaseModel, Field, ConfigDict
-from datetime import datetime
 
 
 class CategoryCreateSchema(BaseModel):
     name: str = Field(
         min_length=1,
         max_length=100,
+        pattern=r'\S+'
     )
 
 

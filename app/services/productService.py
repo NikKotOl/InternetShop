@@ -1,9 +1,8 @@
-from typing import Optional
-
-from app.core.exceptions import CategoryNotFoundError
+from app.core.exceptions import CategoryNotFoundError, ProductNotFoundError
 from app.models.productModel import ProductModel
 from app.repositories.categoryRepository import CategoryRepository
 from app.repositories.productRepository import ProductRepository
+from app.core.exceptions import ProductNotFoundError
 
 
 class ProductService:
@@ -18,3 +17,10 @@ class ProductService:
         if category is None:
             raise CategoryNotFoundError(category_id)
         return await self.productRepository.add_product(name, category_id)
+    
+
+    async def delete_product(self, id: int) -> ProductModel:
+        product = await self.productRepository.get_product_by_id(id)
+        if product is None:
+            raise ProductNotFoundError(id)
+        return await self.productRepository.delete_product(product)

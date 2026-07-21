@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from app.core.exception_handler import notFoundErrorHandler
+from app.core.exception_handler import not_found_error_handler
 from app.core.exceptions import NotFoundError
 from sqlalchemy import text
 
@@ -34,7 +34,7 @@ def starter_page() -> dict[str, str]:
 
 
 app.include_router(categoryRouter)
-app.add_exception_handler(NotFoundError, notFoundErrorHandler)
+app.add_exception_handler(NotFoundError, not_found_error_handler)
 
 
 if __name__ == "__main__":
