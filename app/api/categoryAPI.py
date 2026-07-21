@@ -1,21 +1,16 @@
 from typing import Sequence
 
 from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.dependencies import get_category_repository, get_product_service
 from app.core.exceptions import CategoryNotFoundError
-from app.db.database import get_db
 from app.repositories.categoryRepository import CategoryRepository
 from app.schemas.categorySchemas import CategoryCreateSchema, CategoryResponseSchema
 from app.core.logger import logger
+from app.schemas.productSchemas import ProductResponseSchema
+from app.services.productService import ProductService
 
 router = APIRouter(prefix="/categories", tags=["categories"])
-
-
-def get_category_repository(
-    session: AsyncSession = Depends(get_db),
-) -> CategoryRepository:
-    return CategoryRepository(session=session)
 
 
 @router.get("/")
@@ -68,3 +63,11 @@ async def get_category_by_id(
     logger.info(f"Get category with id {id}")
 
     return CategoryResponseSchema.model_validate(result)
+
+
+
+@router.get("/{category_id}/products")
+async def get_products_by_category_id(category_id: int, product_service: ProductService = Depends(get_product_service)) -> Sequence[ProductResponseSchema]:
+    result = await product_service.get_products_by_category_id(category_id)
+    return [ProductResponseSchema.model_validate(product) for product in result]
+

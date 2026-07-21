@@ -1,4 +1,7 @@
+from typing import Sequence
+
 from app.core.exceptions import CategoryNotFoundError, ProductNotFoundError
+from app.models.categoryModel import CategoryModel
 from app.models.productModel import ProductModel
 from app.repositories.categoryRepository import CategoryRepository
 from app.repositories.productRepository import ProductRepository
@@ -24,3 +27,10 @@ class ProductService:
         if product is None:
             raise ProductNotFoundError(id)
         return await self.productRepository.delete_product(product)
+    
+
+    async def get_products_by_category_id(self, category_id: int) -> Sequence[ProductModel]:
+        category = await self.categoryRepository.get_category_by_id(category_id)
+        if category is None:
+            raise CategoryNotFoundError(category_id)
+        return await self.productRepository.get_products_by_category_id(category_id)
