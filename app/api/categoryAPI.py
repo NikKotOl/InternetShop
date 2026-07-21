@@ -1,8 +1,9 @@
 from typing import Sequence
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.exceptions import CategoryNotFoundError
 from app.db.database import get_db
 from app.repositories.categoryRepository import CategoryRepository
 from app.schemas.categorySchemas import CategoryCreateSchema, CategoryResponseSchema
@@ -11,7 +12,9 @@ from app.core.logger import logger
 router = APIRouter(prefix="/categories", tags=["categories"])
 
 
-def get_category_repository(session: AsyncSession = Depends(get_db)) -> CategoryRepository:
+def get_category_repository(
+    session: AsyncSession = Depends(get_db),
+) -> CategoryRepository:
     return CategoryRepository(session=session)
 
 
@@ -44,7 +47,7 @@ async def delete_category(
 
     if result is None:
         logger.error(f"Category with id {id} not found")
-        raise HTTPException(status_code=404, detail="Category not found")
+        raise CategoryNotFoundError(id)
 
     logger.info(f"Category with id {id} was deleted")
     return CategoryResponseSchema.model_validate(result)
@@ -55,13 +58,13 @@ async def get_category_by_id(
     id: int,
     repository: CategoryRepository = Depends(get_category_repository),
 ) -> CategoryResponseSchema:
-    
+
     result = await repository.get_category_by_id(id=id)
 
     if result is None:
         logger.error(f"Category with id={id} not found")
-        raise HTTPException(status_code=404, detail="Category not found")
-    
+        raise CategoryNotFoundError(id)
+
     logger.info(f"Get category with id {id}")
 
     return CategoryResponseSchema.model_validate(result)

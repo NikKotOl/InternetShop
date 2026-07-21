@@ -15,8 +15,8 @@ from app.schemas.productSchemas import ProductCreateSchema
 
 def get_product_repository(
     session: AsyncSession = Depends(get_db),
-) -> CategoryRepository:
-    return CategoryRepository(session=session)
+) -> ProductRepository:
+    return ProductRepository(session=session)
 
 
 def get_product_service(
@@ -52,5 +52,5 @@ async def delete_product(
     id: int, service: ProductService = Depends(get_product_service)
 ) -> ProductResponseSchema:
     result = await service.delete_product(id)
-    logger.info("Deleted product with id={id}")
+    logger.info(f"Deleted product with id={id}")
     return ProductResponseSchema.model_validate(result)
