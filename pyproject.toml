@@ -11,6 +11,7 @@ dependencies = [
     "loguru>=0.7.3",
     "psycopg2>=2.9.12",
     "pydantic-settings>=2.14.2",
+    "pytest-sugar>=1.1.1",
     "sqlalchemy>=2.0.51",
     "uvicorn>=0.51.0",
 ]
@@ -18,4 +19,15 @@ dependencies = [
 [dependency-groups]
 dev = [
     "black>=26.5.1",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "pytest-cov>=7.1.0",
+]
+
+[tool.pytest.ini_options]
+    testpaths=["tests/"]
+    asyncio_mode="auto"
+    pythonpath = ["."]
+    addopts = [
+    "--no-header",
 ]

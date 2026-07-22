@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from app.core.exception_handler import not_found_error_handler
-from app.core.exceptions import NotFoundError
 from sqlalchemy import text
 
 from app.core.logger import logger
 from app.db.database import AsyncSessionLocal
 from app.api.categoryAPI import router as categoryRouter
 from app.api.productAPI import router as productRouter
+from app.core.exception_handler import not_found_error_handler
+from app.core.exceptions import NotFoundError
 
 import uvicorn
 
