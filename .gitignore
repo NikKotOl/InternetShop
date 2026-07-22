@@ -1,22 +1,30 @@
+# Личные файлы обучения
 PROJECT_PROGRESS.md
 LEARNING_RULES.md
 DECISIONS.md
 local.md
+
+# Личные инструменты
 postman/
-
-
 
 # Виртуальное окружение
 .venv/
 
-# Кеш Python
+# Python cache
 __pycache__/
-*.pyc
+*.py[cod]
 
-# Переменные окружения (секреты!)
+# Pytest
+.pytest_cache/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Environment
 .env
 
-# Логи
+# Logs
 logs/
 
 # IDE
