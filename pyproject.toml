@@ -12,6 +12,7 @@ dependencies = [
     "psycopg2>=2.9.12",
     "pydantic-settings>=2.14.2",
     "pytest-sugar>=1.1.1",
+    "ruff>=0.16.0",
     "sqlalchemy>=2.0.51",
     "uvicorn>=0.51.0",
 ]
@@ -31,3 +32,6 @@ dev = [
     addopts = [
     "--no-header",
 ]
+
+[tool.ruff.lint]
+    select = ["ASYNC"]
