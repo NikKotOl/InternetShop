@@ -25,18 +25,18 @@ async def lifespan(app: FastAPI):
     logger.info("Application stopped")
 
 
-app = FastAPI(lifespan=lifespan)
+application = FastAPI(lifespan=lifespan)
 
 
-@app.get("/", summary="Start page")
+@application.get("/", summary="Start page")
 def starter_page() -> dict[str, str]:
     logger.info("GET /")
     return {"success": "true"}
 
 
-app.include_router(categoryRouter)
-app.include_router(productRouter)
-app.add_exception_handler(NotFoundError, not_found_error_handler)
+application.include_router(categoryRouter)
+application.include_router(productRouter)
+application.add_exception_handler(NotFoundError, not_found_error_handler)
 
 
 if __name__ == "__main__":
