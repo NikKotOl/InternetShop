@@ -3,6 +3,7 @@ from unittest.mock import Mock
 import pytest
 
 from app.core.dependencies import AsyncSession
+from app.core.exceptions import CategoryNotFoundError
 from app.models.categoryModel import CategoryModel
 from app.repositories.categoryRepository import CategoryRepository
 
@@ -34,7 +35,7 @@ async def test_get_categories(session, category_repository):
     assert result == [category1, category2]
 
 
-async def test_delete_category(session, category_repository):
+async def test_delete_category_success(session, category_repository):
     category = CategoryModel(id=1, name="name")
     session.get.return_value = category
 
@@ -46,6 +47,14 @@ async def test_delete_category(session, category_repository):
     assert result == category
 
 
+async def test_delete_category_return_none(session, category_repository):
+    session.get.return_value = None
+    result = await category_repository.delete_category(id=10000000000)
+
+    session.delete.assert_not_called()
+    assert result is None
+
+
 async def test_get_category_by_id(session, category_repository):
     category = CategoryModel(id=1, name="name")
 
@@ -55,3 +64,16 @@ async def test_get_category_by_id(session, category_repository):
 
     session.get.assert_called_once_with(CategoryModel, 1)
     assert result == category
+
+
+async def test_add_category(session, category_repository):
+    result = await category_repository.add_category("name")
+
+    added_category = session.add.call_args[0][0]
+    assert added_category.name == "name"
+
+    session.commit.assert_called_once()
+    session.refresh.assert_called_once_with(added_category)
+
+    assert result is added_category
+    assert result.name == "name"

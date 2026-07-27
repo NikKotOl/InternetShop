@@ -10,8 +10,11 @@ from app.services.productService import ProductService
 from app.core.logger import logger
 from app.schemas.productSchemas import ProductCreateSchema
 
-
-router = APIRouter(prefix="/product", tags=["Products"])
+router = APIRouter(
+    prefix="/product",
+    tags=["Products"],
+    responses={404: {"Description": "Product not found"}},
+)
 
 
 @router.get("/")
@@ -25,10 +28,13 @@ async def get_products(
 
 @router.post("/")
 async def add_product(
-    product: ProductCreateSchema, product_service: ProductService = Depends(get_product_service)
+    product: ProductCreateSchema,
+    product_service: ProductService = Depends(get_product_service),
 ) -> ProductResponseSchema:
     result = await product_service.add_product(product.name, product.category_id)
-    logger.info(f"Added product with name={result.name}, category id={result.category_id} and id={result.id}")
+    logger.info(
+        f"Added product with name={result.name}, category id={result.category_id} and id={result.id}"
+    )
     return ProductResponseSchema.model_validate(result)
 
 

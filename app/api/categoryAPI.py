@@ -10,7 +10,11 @@ from app.core.logger import logger
 from app.schemas.productSchemas import ProductResponseSchema
 from app.services.productService import ProductService
 
-router = APIRouter(prefix="/categories", tags=["categories"])
+router = APIRouter(
+    prefix="/categories",
+    tags=["categories"],
+    responses={404: {"Description": "Category not found"}},
+)
 
 
 @router.get("/")
