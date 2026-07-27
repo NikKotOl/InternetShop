@@ -11,7 +11,7 @@ from app.core.logger import logger
 from app.schemas.productSchemas import ProductCreateSchema
 
 router = APIRouter(
-    prefix="/product",
+    prefix="/products",
     tags=["Products"],
     responses={404: {"Description": "Product not found"}},
 )

@@ -1,5 +1,6 @@
 import pytest
-from testcontainers.postgres import PostgresContainer
+from sqlalchemy import text
+from testcontainers.community.postgres import PostgresContainer
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from httpx import AsyncClient, ASGITransport
 
@@ -16,7 +17,9 @@ def postgres_container():
 
 @pytest.fixture(scope="session")
 def test_engine(postgres_container):
-    async_url = postgres_container.replace("postgresql://", "postgresql+asyncpg://")
+    async_url = postgres_container.replace(
+        "postgresql+psycopg2://", "postgresql+asyncpg://"
+    )
     return create_async_engine(url=async_url)
 
 
@@ -38,7 +41,7 @@ async def setup_database(test_engine):
         await conn.run_sync(Base.metadata.drop_all)
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 async def override_get_db(test_async_session):
     async def _get_test_db():
         async with test_async_session() as session:
@@ -55,3 +58,14 @@ async def client(override_get_db):
         transport=ASGITransport(app=application), base_url="http://test"
     ) as ac:
         yield ac
+
+
+@pytest.fixture(scope="function", autouse=True)
+async def cleanup_database(test_engine):
+    yield
+
+    async with test_engine.begin() as conn:
+        for table in reversed(Base.metadata.sorted_tables):
+            await conn.execute(
+                text(f"TRUNCATE TABLE {table.name} RESTART IDENTITY CASCADE")
+            )

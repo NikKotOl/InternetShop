@@ -27,9 +27,9 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-    testpaths=["tests/"]
-    asyncio_mode="auto"
+    testpaths = ["tests/"]
+    asyncio_mode = "auto"
     pythonpath = ["."]
-    addopts = [
-    "--no-header",
-]
+    addopts = ["--no-header"]
+    asyncio_default_fixture_loop_scope = "session"
+    asyncio_default_test_loop_scope = "session"
