@@ -3,6 +3,7 @@ from typing import Sequence
 from fastapi import APIRouter, Depends
 
 from app.core.dependencies import get_product_repository, get_product_service
+from app.core.exceptions import ProductNotFoundError
 from app.repositories.categoryRepository import CategoryRepository
 from app.repositories.productRepository import ProductRepository
 from app.schemas.productSchemas import ProductResponseSchema
@@ -26,6 +27,17 @@ async def get_products(
     return [ProductResponseSchema.model_validate(c) for c in result]
 
 
+@router.get("/{product_id}")
+async def get_product_by_id(
+    product_id: int, product_repository: ProductRepository = Depends(get_product_repository)
+):
+    result = await product_repository.get_product_by_id(product_id)
+    if result is None:
+        raise ProductNotFoundError(product_id)
+    logger.info(f"Get product with id={id}")
+    return ProductResponseSchema.model_validate(result)
+
+
 @router.post("/")
 async def add_product(
     product: ProductCreateSchema,
@@ -38,10 +50,10 @@ async def add_product(
     return ProductResponseSchema.model_validate(result)
 
 
-@router.delete("/{id}")
+@router.delete("/{product_id}")
 async def delete_product(
-    id: int, product_service: ProductService = Depends(get_product_service)
+    product_id: int, product_service: ProductService = Depends(get_product_service)
 ) -> ProductResponseSchema:
-    result = await product_service.delete_product(id)
-    logger.info(f"Deleted product with id={id}")
+    result = await product_service.delete_product(product_id)
+    logger.info(f"Deleted product with id={product_id}")
     return ProductResponseSchema.model_validate(result)
