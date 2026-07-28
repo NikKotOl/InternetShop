@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      # Settings() требует эти переменные при импорте приложения,
+      # но реальное подключение к БД в тестах идёт через testcontainers,
+      # эти значения не используются напрямую
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: test
@@ -26,8 +29,8 @@ jobs:
       - name: Dependencies
         run: uv sync
 
-      - name: Tests
-        run: uv run pytest
-
       - name: Format
         run: uv run black --check .
+
+      - name: Tests
+        run: uv run pytest
