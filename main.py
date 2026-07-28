@@ -17,7 +17,9 @@ async def lifespan(app: FastAPI):
     logger.info("Starting application...")
 
     async with AsyncSessionLocal() as session:
-        await session.execute(text("SELECT 1"))
+        await session.execute(
+            text("TRUNCATE TABLE products, categories RESTART IDENTITY CASCADE")
+        )
         logger.info("Connected to PostgreSQL")
 
     logger.info("Application startup completed")
