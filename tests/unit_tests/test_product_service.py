@@ -112,3 +112,26 @@ async def test_get_products_by_category_id_success(
     product_repository.get_products_by_category_id.assert_called_once_with(1)
 
     assert result == products
+
+
+async def test_get_product_by_id_success(product_repository, product_service):
+    product = ProductModel(id=1, name="product", category_id=1)
+
+    product_repository.get_product_by_id.return_value = product
+
+    result = await product_service.get_product_by_id(id=1)
+
+    product_repository.get_product_by_id.assert_called_once_with(1)
+
+    assert result.id == 1
+    assert result.name == "product"
+    assert result.category_id == 1
+
+
+async def test_get_product_by_id_raises_not_found_error(
+    product_repository, product_service
+):
+    product_repository.get_product_by_id.return_value = None
+
+    with pytest.raises(ProductNotFoundError):
+        await product_service.get_product_by_id(id=1)

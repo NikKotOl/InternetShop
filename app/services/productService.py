@@ -16,6 +16,12 @@ class ProductService:
         self.productRepository = productRepository
         self.categoryRepository = categoryRepository
 
+    async def get_product_by_id(self, id: int) -> ProductModel:
+        product = await self.productRepository.get_product_by_id(id)
+        if product is None:
+            raise ProductNotFoundError(id)
+        return product
+
     async def add_product(self, name: str, category_id: int) -> ProductModel:
         category = await self.categoryRepository.get_category_by_id(category_id)
         if category is None:

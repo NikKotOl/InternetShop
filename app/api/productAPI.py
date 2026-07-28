@@ -29,12 +29,10 @@ async def get_products(
 
 @router.get("/{product_id}")
 async def get_product_by_id(
-    product_id: int, product_repository: ProductRepository = Depends(get_product_repository)
+    product_id: int, product_service: ProductService = Depends(get_product_service)
 ):
-    result = await product_repository.get_product_by_id(product_id)
-    if result is None:
-        raise ProductNotFoundError(product_id)
-    logger.info(f"Get product with id={id}")
+    result = await product_service.get_product_by_id(product_id)
+    logger.info(f"Get product with id={product_id}")
     return ProductResponseSchema.model_validate(result)
 
 

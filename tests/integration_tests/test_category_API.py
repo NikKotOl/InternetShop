@@ -49,3 +49,15 @@ async def test_get_products_by_category_id(client):
 
     assert response.status_code == 200
     assert response.json()[0] == products[0]
+
+
+async def test_delete_category_raises_not_found_error(client):
+    response = await client.delete("/categories/9999")
+
+    assert response.status_code == 404
+
+
+async def test_get_category_by_id_raises_not_found_error(client):
+    response = await client.get("/categories/999")
+
+    assert response.status_code == 404
