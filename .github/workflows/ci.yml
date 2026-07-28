@@ -1,20 +1,20 @@
 name: CI
 
 on: 
-    push:
-    pull_request:
+  push:
+  pull_request:
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     env:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
-        POSTGRES_DB: test
-        POSTGRES_HOST: localhost
-        POSTGRES_PORT: 5432
-        SECRET_KEY: test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: test
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      SECRET_KEY: test
 
     steps:
       - name: Checkout
@@ -28,3 +28,6 @@ jobs:
 
       - name: Tests
         run: uv run pytest
+
+      - name: Format
+        run: uv run black --check .
