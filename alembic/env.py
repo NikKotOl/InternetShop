@@ -8,16 +8,12 @@ from app.core.config import settings
 from app.db.base import Base
 import app.models
 
-
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
 
-config.set_main_option(
-    "sqlalchemy.url",
-    settings.database_url
-)
+config.set_main_option("sqlalchemy.url", settings.database_url)
 
 
 # Interpret the config file for Python logging.
@@ -67,14 +63,12 @@ def run_migrations_online() -> None:
     # Берём URL из настроек
     url = config.get_main_option("sqlalchemy.url")
     # Заменяем asyncpg на psycopg2 (синхронный драйвер)
-    sync_url = url.replace("postgresql+asyncpg://", "postgresql://") # type: ignore
+    sync_url = url.replace("postgresql+asyncpg://", "postgresql://")  # type: ignore
 
     connectable = create_engine(sync_url, poolclass=NullPool)
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

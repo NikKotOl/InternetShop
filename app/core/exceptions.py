@@ -13,7 +13,7 @@ class ProductNotFoundError(NotFoundError):
 
 
 class CategoryNotFoundError(NotFoundError):
-    
+
     def __init__(self, id: int):
         self.message = f"Category with id={id} not found"
         super().__init__(self.message)
