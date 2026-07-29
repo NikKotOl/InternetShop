@@ -92,7 +92,7 @@ uv run pytest
 ```
 
 ## API Documentation
-Swagger UI available at `Here will be my domen`
+Swagger UI available at `https://internetshop-j1ep.onrender.com`
 
 ## What This Project Demonstrates
 - Clean architecture separation (Repository → Service → Router)
