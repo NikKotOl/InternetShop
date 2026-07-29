@@ -55,3 +55,12 @@ async def delete_product(
     result = await product_service.delete_product(product_id)
     logger.info(f"Deleted product with id={product_id}")
     return ProductResponseSchema.model_validate(result)
+
+
+@router.get("/{category_id}/products")
+async def get_products_by_category_id(
+    category_id: int, product_service: ProductService = Depends(get_product_service)
+) -> Sequence[ProductResponseSchema]:
+    result = await product_service.get_products_by_category_id(category_id)
+    logger.info(f"Get products with category id = {category_id}")
+    return [ProductResponseSchema.model_validate(product) for product in result]
