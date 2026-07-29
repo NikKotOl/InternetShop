@@ -92,7 +92,7 @@ uv run pytest
 ```
 
 ## API Documentation
-Swagger UI available at `http://localhost:8000/docs`
+Swagger UI available at `Here will be my domen`
 
 ## What This Project Demonstrates
 - Clean architecture separation (Repository → Service → Router)
