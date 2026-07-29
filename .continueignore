@@ -1,0 +1,32 @@
+# Virtual environment
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Tests cache
+.pytest_cache/
+
+# Git
+.git/
+
+# IDE
+.vscode/
+.idea/
+
+# Environment files
+.env
+.env.*
+
+# Build files
+dist/
+build/
+
+# Node (если когда-нибудь появится frontend)
+node_modules/
+
+# Docker volumes
+postgres_data/
