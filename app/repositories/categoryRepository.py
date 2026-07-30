@@ -28,7 +28,7 @@ class CategoryRepository:
 
         Returns:
             CategoryModel: The newly created and saved category instance.
-        
+
         Raises:
             Exception: If an error occurs during save/commit (not explicitly raised in original, but good practice).
         """
