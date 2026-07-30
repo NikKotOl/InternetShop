@@ -20,12 +20,22 @@ class UserService:
         self.user_repository = user_repository
 
     async def get_user_by_id(self, id: int) -> UserModel:
+        """Get user by their unique ID."""
+
         user = await self.user_repository.get_user_by_id(id=id)
         if user is None:
             raise UserNotFoundError(id)
         return user
 
     async def register_user(self, username: str, password: str) -> UserModel:
+        """Register a new user account.
+
+        :param username: The unique login name for the new user.
+        :param password: The plain-text password to be hashed and stored securely.
+        :return: A UserModel object containing the newly created user's data.
+        :raises UserAlreadyExistsError: If a user with this username already exists.
+        """
+
         user = await self.user_repository.get_user_by_username(username=username)
 
         if user is not None:
@@ -38,6 +48,15 @@ class UserService:
         )
 
     async def authenticate_user(self, username: str, password: str) -> UserModel:
+        """Authenticate a user with provided credentials.
+
+        :param username: The login name of the user to authenticate.
+        :param password: The plain-text password for verification.
+        :return: A UserModel object containing authenticated user's data if successful.
+        :raises UserNotFoundError: If no user exists with this username.
+        :raises InvalidCredentialsError: If the provided credentials do not match.
+        """
+
         user = await self.user_repository.get_user_by_username(username=username)
 
         if user is None:
