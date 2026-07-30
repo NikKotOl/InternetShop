@@ -1,8 +1,10 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
+from jwt import ExpiredSignatureError, InvalidTokenError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.exceptions import UserNotFoundError
 from app.core.security import decode_access_token
 from app.db.database import AsyncSessionLocal
 from app.models.userModel import UserModel
@@ -11,6 +13,7 @@ from app.repositories.productRepository import ProductRepository
 from app.repositories.userRepository import UserRepository
 from app.services.productService import ProductService
 from app.services.userService import UserService
+from app.core.logger import logger
 
 http_bearer = HTTPBearer()
 
@@ -53,6 +56,17 @@ async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(http_bearer),
     user_service: UserService = Depends(get_user_service),
 ) -> UserModel:
-    user_id = decode_access_token(credentials.credentials)
-    user = await user_service.get_user_by_id(user_id)
+    try:
+        user_id = decode_access_token(credentials.credentials)
+    except ExpiredSignatureError:
+        logger.warning("JWT expired")
+        raise HTTPException(status_code=401, detail="Could not validate credentials")
+    except InvalidTokenError:
+        logger.warning("JWT invalid or malformed")
+        raise HTTPException(status_code=401, detail="Could not validate credentials")
+    try:
+        user = await user_service.get_user_by_id(user_id)
+    except UserNotFoundError:
+        logger.warning(f"User {user_id} from token not found in DB")
+        raise HTTPException(status_code=401, detail="Could not validate credentials")
     return user
