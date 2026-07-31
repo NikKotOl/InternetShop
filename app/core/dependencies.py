@@ -70,3 +70,11 @@ async def get_current_user(
         logger.warning(f"User {user_id} from token not found in DB")
         raise HTTPException(status_code=401, detail="Could not validate credentials")
     return user
+
+
+async def get_current_is_admin_user(
+    user: UserModel = Depends(get_current_user),
+) -> UserModel:
+    if not user.is_admin:
+        raise HTTPException(status_code=403, detail="User not an admin")
+    return user
