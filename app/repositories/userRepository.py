@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Sequence
 
 from sqlalchemy import select
 
@@ -12,6 +12,11 @@ class UserRepository:
 
     def __init__(self, session: AsyncSession):
         self.session = session
+
+    async def get_users(self) -> Sequence[UserModel]:
+        stmt = select(UserModel)
+        result = await self.session.execute(stmt)
+        return result.scalars().all()
 
     async def get_user_by_username(self, username: str) -> Optional[UserModel]:
         stmt = select(UserModel).where(UserModel.username == username)
