@@ -6,6 +6,7 @@ from app.core.logger import logger
 from app.db.database import AsyncSessionLocal
 from app.api.categoryAPI import router as categoryRouter
 from app.api.productAPI import router as productRouter
+from app.api.userAPI import router as userRouter
 from app.core.exception_handler import not_found_error_handler
 from app.core.exceptions import NotFoundError
 
@@ -38,6 +39,7 @@ def starter_page() -> dict[str, str]:
 
 application.include_router(categoryRouter)
 application.include_router(productRouter)
+application.include_router(userRouter)
 application.add_exception_handler(NotFoundError, not_found_error_handler)
 
 

@@ -1,31 +1,38 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter, Depends
 
-from app.core.dependencies import get_db
-from app.models.userModel import UserModel
-from app.repositories.userRepository import UserRepository
+from app.core.dependencies import get_user_service
+from app.schemas.tokenSchemas import TokenResponseSchema
+from app.schemas.userSchemas import (
+    UserCreateSchema,
+    UserLoginSchema,
+    UserResponseSchema,
+)
 from app.services.userService import UserService
+from app.core.security import create_access_token
+from app.core.logger import logger
 
-router = APIRouter()
+router = APIRouter(prefix="/auth", tags=["auth"])
 
-@router.get("/users/", response_model=list[UserModel])
-async def get_users(session: AsyncSession = Depends(get_db)):
-    """Возвращает список всех пользователей из базы данных."""
-    user_repository = UserRepository(session)
-    return await user_repository.get_users()
 
-@router.post("/users/", response_model=UserModel)
-async def create_user(user: UserModel, session: AsyncSession = Depends(get_db)):
-    """Создает нового пользователя в базе данных."""
-    user_repository = UserRepository(session)
-    return await user_repository.register_user(user)
+@router.post("/register", response_model=UserResponseSchema)
+async def register(
+    data: UserCreateSchema, user_service: UserService = Depends(get_user_service)
+):
+    user = await user_service.register_user(
+        username=data.username, password=data.password
+    )
+    logger.info(f"User with username '{user.username}' was registered")
+    return UserResponseSchema.model_validate(user)
 
-@router.get("/users/{user_id}", response_model=UserModel)
-async def get_user_by_id(user_id: int, session: AsyncSession = Depends(get_db)):
-    """Возвращает пользователя по его идентификатору."""
-    user_repository = UserRepository(session)
-    user = await user_repository.get_user_by_id(user_id)
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
 
+@router.post("/login", response_model=TokenResponseSchema)
+async def login(
+    data: UserLoginSchema, user_service: UserService = Depends(get_user_service)
+):
+    user = await user_service.authenticate_user(
+        username=data.username, password=data.password
+    )
+    logger.info(f"User {data.username} logged in successfully")
+
+    token = create_access_token(user.id)
+    return TokenResponseSchema(access_token=token, token_type="bearer")
