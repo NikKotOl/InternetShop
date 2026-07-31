@@ -2,7 +2,12 @@ from typing import Sequence
 
 from fastapi import APIRouter, Depends
 
-from app.core.dependencies import get_category_repository, get_product_service
+from app.core.dependencies import (
+    get_category_repository,
+    get_current_is_admin_user,
+    get_current_user,
+    get_product_service,
+)
 from app.core.exceptions import CategoryNotFoundError
 from app.repositories.categoryRepository import CategoryRepository
 from app.schemas.categorySchemas import CategoryCreateSchema, CategoryResponseSchema
@@ -17,7 +22,7 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("/", dependencies=[Depends(get_current_user)])
 async def get_categories(
     repository: CategoryRepository = Depends(get_category_repository),
 ) -> Sequence[CategoryResponseSchema]:
@@ -26,7 +31,7 @@ async def get_categories(
     return [CategoryResponseSchema.model_validate(c) for c in result]
 
 
-@router.post("/")
+@router.post("/", dependencies=[Depends(get_current_is_admin_user)])
 async def add_category(
     category: CategoryCreateSchema,
     repository: CategoryRepository = Depends(get_category_repository),
@@ -36,7 +41,7 @@ async def add_category(
     return CategoryResponseSchema.model_validate(result)
 
 
-@router.delete("/{id}")
+@router.delete("/{id}", dependencies=[Depends(get_current_is_admin_user)])
 async def delete_category(
     id: int,
     repository: CategoryRepository = Depends(get_category_repository),
@@ -52,7 +57,7 @@ async def delete_category(
     return CategoryResponseSchema.model_validate(result)
 
 
-@router.get("/{id}")
+@router.get("/{id}", dependencies=[Depends(get_current_user)])
 async def get_category_by_id(
     id: int,
     repository: CategoryRepository = Depends(get_category_repository),
@@ -69,7 +74,7 @@ async def get_category_by_id(
     return CategoryResponseSchema.model_validate(result)
 
 
-@router.get("/{category_id}/products")
+@router.get("/{category_id}/products", dependencies=[Depends(get_current_user)])
 async def get_products_by_category_id(
     category_id: int, product_service: ProductService = Depends(get_product_service)
 ) -> Sequence[ProductResponseSchema]:
