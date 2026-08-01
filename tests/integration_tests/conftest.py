@@ -5,7 +5,9 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sess
 from httpx import AsyncClient, ASGITransport
 
 from app.core.dependencies import get_db
+from app.core.security import create_access_token
 from app.db.base import Base
+from app.models.userModel import UserModel
 from main import application
 
 
@@ -69,3 +71,18 @@ async def cleanup_database(test_engine):
             await conn.execute(
                 text(f"TRUNCATE TABLE {table.name} RESTART IDENTITY CASCADE")
             )
+
+
+@pytest.fixture(scope="function")
+async def admin_token(test_async_session, cleanup_database) -> str:
+    async with test_async_session() as session:
+        user = UserModel(
+            username="test_admin",
+            password_hash="fake_hash_not_used_for_login",
+            is_admin=True,
+        )
+        session.add(user)
+        await session.commit()
+        await session.refresh(user)
+
+    return create_access_token(user.id)

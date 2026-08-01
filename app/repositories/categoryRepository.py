@@ -15,11 +15,23 @@ class CategoryRepository:
         self.session = session
 
     async def get_categories(self) -> Sequence[CategoryModel]:
+        """Retrieve all categories from the database."""
         stmt = select(CategoryModel)
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
     async def add_category(self, name: str) -> CategoryModel:
+        """Add a new category to the database.
+
+        Args:
+            name (str): The name of the category to be added.
+
+        Returns:
+            CategoryModel: The newly created and saved category instance.
+
+        Raises:
+            Exception: If an error occurs during save/commit (not explicitly raised in original, but good practice).
+        """
         new_category = CategoryModel(name=name)
         self.session.add(new_category)
         await self.session.commit()

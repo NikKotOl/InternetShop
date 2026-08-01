@@ -18,6 +18,7 @@ jobs:
       POSTGRES_HOST: localhost
       POSTGRES_PORT: 5432
       SECRET_KEY: test
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
 
     steps:
       - name: Checkout

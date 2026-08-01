@@ -2,9 +2,12 @@ from typing import Sequence
 
 from fastapi import APIRouter, Depends
 
-from app.core.dependencies import get_product_repository, get_product_service
-from app.core.exceptions import ProductNotFoundError
-from app.repositories.categoryRepository import CategoryRepository
+from app.core.dependencies import (
+    get_current_is_admin_user,
+    get_current_user,
+    get_product_repository,
+    get_product_service,
+)
 from app.repositories.productRepository import ProductRepository
 from app.schemas.productSchemas import ProductResponseSchema
 from app.services.productService import ProductService
@@ -18,7 +21,7 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("/", dependencies=[Depends(get_current_user)])
 async def get_products(
     repository: ProductRepository = Depends(get_product_repository),
 ) -> Sequence[ProductResponseSchema]:
@@ -27,7 +30,7 @@ async def get_products(
     return [ProductResponseSchema.model_validate(c) for c in result]
 
 
-@router.get("/{product_id}")
+@router.get("/{product_id}", dependencies=[Depends(get_current_user)])
 async def get_product_by_id(
     product_id: int, product_service: ProductService = Depends(get_product_service)
 ):
@@ -36,7 +39,7 @@ async def get_product_by_id(
     return ProductResponseSchema.model_validate(result)
 
 
-@router.post("/")
+@router.post("/", dependencies=[Depends(get_current_is_admin_user)])
 async def add_product(
     product: ProductCreateSchema,
     product_service: ProductService = Depends(get_product_service),
@@ -48,7 +51,7 @@ async def add_product(
     return ProductResponseSchema.model_validate(result)
 
 
-@router.delete("/{product_id}")
+@router.delete("/{product_id}", dependencies=[Depends(get_current_is_admin_user)])
 async def delete_product(
     product_id: int, product_service: ProductService = Depends(get_product_service)
 ) -> ProductResponseSchema:
