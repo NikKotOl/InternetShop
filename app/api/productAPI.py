@@ -21,7 +21,7 @@ router = APIRouter(
 )
 
 
-@router.get("/", dependencies=[Depends(get_current_user)])
+@router.get("/")
 async def get_products(
     repository: ProductRepository = Depends(get_product_repository),
 ) -> Sequence[ProductResponseSchema]:
@@ -30,7 +30,7 @@ async def get_products(
     return [ProductResponseSchema.model_validate(c) for c in result]
 
 
-@router.get("/{product_id}", dependencies=[Depends(get_current_user)])
+@router.get("/{product_id}")
 async def get_product_by_id(
     product_id: int, product_service: ProductService = Depends(get_product_service)
 ):

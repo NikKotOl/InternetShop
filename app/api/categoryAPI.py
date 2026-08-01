@@ -22,7 +22,7 @@ router = APIRouter(
 )
 
 
-@router.get("/", dependencies=[Depends(get_current_user)])
+@router.get("/")
 async def get_categories(
     repository: CategoryRepository = Depends(get_category_repository),
 ) -> Sequence[CategoryResponseSchema]:
@@ -57,7 +57,7 @@ async def delete_category(
     return CategoryResponseSchema.model_validate(result)
 
 
-@router.get("/{id}", dependencies=[Depends(get_current_user)])
+@router.get("/{id}")
 async def get_category_by_id(
     id: int,
     repository: CategoryRepository = Depends(get_category_repository),
@@ -74,7 +74,7 @@ async def get_category_by_id(
     return CategoryResponseSchema.model_validate(result)
 
 
-@router.get("/{category_id}/products", dependencies=[Depends(get_current_user)])
+@router.get("/{category_id}/products")
 async def get_products_by_category_id(
     category_id: int, product_service: ProductService = Depends(get_product_service)
 ) -> Sequence[ProductResponseSchema]:
