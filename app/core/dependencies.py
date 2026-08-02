@@ -8,9 +8,11 @@ from app.core.exceptions import UserNotFoundError
 from app.core.security import decode_access_token
 from app.db.database import AsyncSessionLocal
 from app.models.userModel import UserModel
+from app.repositories.cartRepository import CartRepository
 from app.repositories.categoryRepository import CategoryRepository
 from app.repositories.productRepository import ProductRepository
 from app.repositories.userRepository import UserRepository
+from app.services.cartService import CartService
 from app.services.productService import ProductService
 from app.services.userService import UserService
 from app.core.logger import logger
@@ -78,3 +80,18 @@ async def get_current_is_admin_user(
     if not user.is_admin:
         raise HTTPException(status_code=403, detail="User not an admin")
     return user
+
+
+async def get_cart_repository(
+    session: AsyncSession = Depends(get_db),
+) -> CartRepository:
+    return CartRepository(session=session)
+
+
+async def get_cart_service(
+    cart_repository: CartRepository = Depends(get_cart_repository),
+    product_repository: ProductRepository = Depends(get_product_repository),
+) -> CartService:
+    return CartService(
+        cart_repository=cart_repository, product_repository=product_repository
+    )
