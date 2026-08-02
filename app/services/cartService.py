@@ -37,7 +37,7 @@ class CartService:
             user_id=user_id, product_id=product_id, quantity=quantity
         )
 
-    async def get_user_cart(self, user_id: int) -> Sequence[CartItemResponseSchema]:
+    async def get_user_carts(self, user_id: int) -> Sequence[CartItemResponseSchema]:
         carts_row = await self.cart_repository.get_cart_items_with_products_by_user_id(
             user_id
         )
