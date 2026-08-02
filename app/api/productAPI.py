@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends
 
 from app.core.dependencies import (
     get_current_is_admin_user,
-    get_current_user,
     get_product_repository,
     get_product_service,
 )
