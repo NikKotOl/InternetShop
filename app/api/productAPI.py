@@ -43,7 +43,9 @@ async def add_product(
     product: ProductCreateSchema,
     product_service: ProductService = Depends(get_product_service),
 ) -> ProductResponseSchema:
-    result = await product_service.add_product(product.name, product.category_id)
+    result = await product_service.add_product(
+        product.name, product.category_id, product.price
+    )
     logger.info(
         f"Added product with name={result.name}, category id={result.category_id} and id={result.id}"
     )
