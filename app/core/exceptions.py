@@ -46,6 +46,12 @@ class UserAlreadyExistsError(AlreadyExistsError):
             super().__init__(self.message)
 
 
+class CategoryAlreadyExistsError(AlreadyExistsError):
+    def __init__(self, name):
+        self.message = f"Category with name '{name}' is already exists"
+        super().__init__(self.message)
+
+
 class InvalidCredentialsError(Exception):
     def __init__(self):
         self.message = f"Invalid credentials"

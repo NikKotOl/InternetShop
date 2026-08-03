@@ -1,6 +1,7 @@
+from sqlalchemy.exc import IntegrityError
 from typing import Optional, Sequence
 
-from app.core.exceptions import CategoryNotFoundError
+from app.core.exceptions import CategoryAlreadyExistsError
 from app.models.categoryModel import CategoryModel
 from app.db.database import AsyncSession
 
@@ -30,11 +31,15 @@ class CategoryRepository:
             CategoryModel: The newly created and saved category instance.
 
         Raises:
-            Exception: If an error occurs during save/commit (not explicitly raised in original, but good practice).
+            AlreadyExistsError: If a category with this name already exists.
         """
         new_category = CategoryModel(name=name)
         self.session.add(new_category)
-        await self.session.commit()
+        try:
+            await self.session.commit()
+        except IntegrityError:
+            await self.session.rollback()
+            raise CategoryAlreadyExistsError(name)
         await self.session.refresh(new_category)
         return new_category
 
