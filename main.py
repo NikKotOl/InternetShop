@@ -7,8 +7,20 @@ from app.db.database import AsyncSessionLocal
 from app.api.categoryAPI import router as categoryRouter
 from app.api.productAPI import router as productRouter
 from app.api.userAPI import router as userRouter
-from app.core.exception_handler import not_found_error_handler
-from app.core.exceptions import NotFoundError
+from app.api.cartAPI import router as cartRouter
+from app.core.exception_handler import (
+    already_exists_error_handler,
+    cart_access_denied_error_handler,
+    invalid_credentials_error_handler,
+    not_found_error_handler,
+    value_error_handler,
+)
+from app.core.exceptions import (
+    AlreadyExistsError,
+    CartAccessDeniedError,
+    InvalidCredentialsError,
+    NotFoundError,
+)
 
 import uvicorn
 
@@ -40,7 +52,16 @@ def starter_page() -> dict[str, str]:
 application.include_router(categoryRouter)
 application.include_router(productRouter)
 application.include_router(userRouter)
+application.include_router(cartRouter)
 application.add_exception_handler(NotFoundError, not_found_error_handler)
+application.add_exception_handler(AlreadyExistsError, already_exists_error_handler)
+application.add_exception_handler(
+    InvalidCredentialsError, invalid_credentials_error_handler
+)
+application.add_exception_handler(ValueError, value_error_handler)
+application.add_exception_handler(
+    CartAccessDeniedError, cart_access_denied_error_handler
+)
 
 
 if __name__ == "__main__":

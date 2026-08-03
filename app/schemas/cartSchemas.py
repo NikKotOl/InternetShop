@@ -23,3 +23,7 @@ class CartAddResponseSchema(CartAddSchema):
     model_config = ConfigDict(from_attributes=True)
     id: int
     user_id: int
+
+
+class UpdateQuantitySchema(BaseModel):
+    quantity: int = Field(gt=0)
