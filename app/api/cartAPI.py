@@ -27,7 +27,7 @@ async def get_user_carts_items(
     user: UserModel = Depends(get_current_user),
     cart_service: CartService = Depends(get_cart_service),
 ) -> Sequence[CartItemResponseSchema]:
-    carts = await cart_service.get_user_carts(user_id=user.id)
+    carts = await cart_service.get_user_cart_items(user_id=user.id)
     logger.info(f"Get carts of user with id={user.id}")
     return carts
 
