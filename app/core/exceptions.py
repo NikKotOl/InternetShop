@@ -56,3 +56,9 @@ class InvalidQuantityError(ValueError):
     def __init__(self, quantity: int):
         self.quantity = quantity
         super().__init__(f"Invalid quantity: {quantity}")
+
+
+class CartNotFoundError(NotFoundError):
+    def __init__(self, id: int):
+        self.message = f"Cart with id={id} not found"
+        super().__init__(self.message)
