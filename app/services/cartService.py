@@ -1,6 +1,11 @@
 from typing import Sequence
 
-from app.core.exceptions import InvalidQuantityError, ProductNotFoundError
+from app.core.exceptions import (
+    CartAccessDeniedError,
+    CartNotFoundError,
+    InvalidQuantityError,
+    ProductNotFoundError,
+)
 from app.models.cartItemModel import CartModel
 from app.repositories.cartRepository import CartRepository
 from app.repositories.productRepository import ProductRepository
@@ -37,7 +42,9 @@ class CartService:
             user_id=user_id, product_id=product_id, quantity=quantity
         )
 
-    async def get_user_carts(self, user_id: int) -> Sequence[CartItemResponseSchema]:
+    async def get_user_cart_items(
+        self, user_id: int
+    ) -> Sequence[CartItemResponseSchema]:
         carts_row = await self.cart_repository.get_cart_items_with_products_by_user_id(
             user_id
         )
@@ -53,3 +60,25 @@ class CartService:
             )
             schemas.append(schema)
         return schemas
+
+    async def update_quantity(
+        self, user_id: int, cart_id: int, quantity: int
+    ) -> CartModel:
+        if quantity < 1:
+            raise InvalidQuantityError(quantity)
+        cart = await self.cart_repository.get_cart_item_by_id(cart_id)
+        if cart is None:
+            raise CartNotFoundError(cart_id)
+        if cart.user_id != user_id:
+            raise CartAccessDeniedError(cart_id)
+        await self.cart_repository.quantity_update(cart, quantity)
+        return cart
+
+    async def delete_cart_item(self, user_id: int, cart_id: int) -> CartModel:
+        cart = await self.cart_repository.get_cart_item_by_id(cart_id)
+        if cart is None:
+            raise CartNotFoundError(cart_id)
+        if cart.user_id != user_id:
+            raise CartAccessDeniedError(cart_id)
+        await self.cart_repository.delete_cart_item(cart_id)
+        return cart
