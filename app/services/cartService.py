@@ -56,7 +56,7 @@ class CartService:
                 product_name=product.name,
                 price=product.price,
                 quantity=cart_item.quantity,
-                subtotal=cart_item.price * cart_item.quantity,
+                subtotal=product.price * cart_item.quantity,
             )
             schemas.append(schema)
         return schemas
