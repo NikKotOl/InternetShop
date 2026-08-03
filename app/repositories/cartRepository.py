@@ -13,6 +13,9 @@ class CartRepository:
     def __init__(self, session):
         self.session = session
 
+    async def get_cart_item_by_id(self, id: int) -> Optional[CartModel]:
+        return await self.session.get(CartModel, id)
+
     async def add_cart(self, user_id: int, product_id: int, quantity: int) -> CartModel:
         new_cart = CartModel(user_id=user_id, product_id=product_id, quantity=quantity)
         self.session.add(new_cart)
@@ -27,7 +30,7 @@ class CartRepository:
         return cart
 
     async def delete_cart_item(self, id: int) -> Optional[CartModel]:
-        cart = await self.session.get(CartModel, id)
+        cart = await self.get_cart_item_by_id(id)
         if not cart:
             return None
         await self.session.delete(cart)
