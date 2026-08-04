@@ -39,7 +39,7 @@ class ProductRepository:
         """
         new_product = ProductModel(name=name, category_id=category_id, price=price)
         self.session.add(new_product)
-        await self.session.commit()
+        await self.session.flush()
         await self.session.refresh(new_product)
         return new_product
 
@@ -52,7 +52,6 @@ class ProductRepository:
             The deleted ProductModel object.
         """
         await self.session.delete(deleted_product)
-        await self.session.commit()
         return deleted_product
 
     async def get_product_by_id(self, id: int) -> Optional[ProductModel]:
