@@ -22,7 +22,12 @@ http_bearer = HTTPBearer()
 
 async def get_db():
     async with AsyncSessionLocal() as session:
-        yield session
+        try:
+            yield session
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            raise
 
 
 def get_product_repository(
