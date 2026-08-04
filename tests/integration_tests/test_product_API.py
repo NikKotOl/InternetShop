@@ -6,12 +6,12 @@ async def test_get_products(client, admin_token):
     )
     await client.post(
         "/products/",
-        json={"name": "product", "category_id": 1},
+        json={"name": "product", "category_id": 1, "price": 100},
         headers={"Authorization": f"Bearer {admin_token}"},
     )
     await client.post(
         "/products/",
-        json={"name": "product2", "category_id": 1},
+        json={"name": "product2", "category_id": 1, "price": 100},
         headers={"Authorization": f"Bearer {admin_token}"},
     )
 
@@ -21,8 +21,8 @@ async def test_get_products(client, admin_token):
 
     assert response.status_code == 200
     assert response.json() == [
-        {"name": "product", "category_id": 1, "id": 1},
-        {"name": "product2", "category_id": 1, "id": 2},
+        {"name": "product", "category_id": 1, "price": "100.00", "id": 1},
+        {"name": "product2", "category_id": 1, "price": "100.00", "id": 2},
     ]
 
 
@@ -34,7 +34,7 @@ async def test_get_product_by_id(client, admin_token):
     )
     await client.post(
         "/products/",
-        json={"name": "product", "category_id": 1},
+        json={"name": "product", "category_id": 1, "price": 100},
         headers={"Authorization": f"Bearer {admin_token}"},
     )
 
@@ -43,7 +43,12 @@ async def test_get_product_by_id(client, admin_token):
     )
 
     assert response.status_code == 200
-    assert response.json() == {"name": "product", "category_id": 1, "id": 1}
+    assert response.json() == {
+        "name": "product",
+        "category_id": 1,
+        "price": "100.00",
+        "id": 1,
+    }
 
 
 async def test_add_product(client, admin_token):
@@ -54,12 +59,17 @@ async def test_add_product(client, admin_token):
     )
     response = await client.post(
         "/products/",
-        json={"name": "product", "category_id": 1},
+        json={"name": "product", "category_id": 1, "price": 100},
         headers={"Authorization": f"Bearer {admin_token}"},
     )
 
     assert response.status_code == 200
-    assert response.json() == {"name": "product", "category_id": 1, "id": 1}
+    assert response.json() == {
+        "name": "product",
+        "category_id": 1,
+        "price": "100.00",
+        "id": 1,
+    }
 
 
 async def test_delete_product(client, admin_token):
@@ -70,7 +80,7 @@ async def test_delete_product(client, admin_token):
     )
     await client.post(
         "/products/",
-        json={"name": "product", "category_id": 1},
+        json={"name": "product", "category_id": 1, "price": 100},
         headers={"Authorization": f"Bearer {admin_token}"},
     )
     response = await client.delete(
@@ -78,7 +88,12 @@ async def test_delete_product(client, admin_token):
     )
 
     assert response.status_code == 200
-    assert response.json() == {"name": "product", "category_id": 1, "id": 1}
+    assert response.json() == {
+        "name": "product",
+        "category_id": 1,
+        "price": "100.00",
+        "id": 1,
+    }
 
 
 async def test_get_product_by_id_raises_404(client, admin_token):
@@ -92,7 +107,7 @@ async def test_get_product_by_id_raises_404(client, admin_token):
 async def test_add_product_raises_404(client, admin_token):
     response = await client.post(
         "/products/",
-        json={"name": "name", "category_id": 9999},
+        json={"name": "name", "category_id": 9999, "price": 100},
         headers={"Authorization": f"Bearer {admin_token}"},
     )
 

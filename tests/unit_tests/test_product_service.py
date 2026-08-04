@@ -32,7 +32,7 @@ async def test_add_product_raises_category_not_found(
     category_repository.get_category_by_id.return_value = None
 
     with pytest.raises(CategoryNotFoundError):
-        await product_service.add_product("name", 999999)
+        await product_service.add_product("name", 999999, 100)
 
     product_repository.add_product.assert_not_called()
 
@@ -47,12 +47,9 @@ async def test_add_product_success(
         id=1, name="product_name", category_id=1
     )
 
-    result = await product_service.add_product("product_name", 1)
+    result = await product_service.add_product("product_name", 1, 100)
 
-    product_repository.add_product.assert_called_once_with(
-        "product_name",
-        1,
-    )
+    product_repository.add_product.assert_called_once_with("product_name", 1, 100)
 
     assert result.name == "product_name"
     assert result.category_id == 1

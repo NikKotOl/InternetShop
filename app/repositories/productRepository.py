@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import Optional, Sequence
 
 from sqlalchemy import select
@@ -26,7 +27,9 @@ class ProductRepository:
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
-    async def add_product(self, name: str, category_id: int) -> ProductModel:
+    async def add_product(
+        self, name: str, category_id: int, price: Decimal
+    ) -> ProductModel:
         """Adds a new product to the database.
         Args:
             name: The name of the product.
@@ -34,7 +37,7 @@ class ProductRepository:
         Returns:
             The saved ProductModel object with an assigned identifier.
         """
-        new_product = ProductModel(name=name, category_id=category_id)
+        new_product = ProductModel(name=name, category_id=category_id, price=price)
         self.session.add(new_product)
         await self.session.commit()
         await self.session.refresh(new_product)

@@ -5,7 +5,6 @@ from fastapi import APIRouter, Depends
 from app.core.dependencies import (
     get_category_repository,
     get_current_is_admin_user,
-    get_current_user,
     get_product_service,
 )
 from app.core.exceptions import CategoryNotFoundError

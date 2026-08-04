@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import Sequence
 
 from app.core.exceptions import CategoryNotFoundError, ProductNotFoundError
@@ -34,7 +35,9 @@ class ProductService:
             raise ProductNotFoundError(id)
         return product
 
-    async def add_product(self, name: str, category_id: int) -> ProductModel:
+    async def add_product(
+        self, name: str, category_id: int, price: Decimal
+    ) -> ProductModel:
         """
         Добавляет новый продукт в категорию.
 
@@ -52,7 +55,7 @@ class ProductService:
         category = await self.categoryRepository.get_category_by_id(category_id)
         if category is None:
             raise CategoryNotFoundError(category_id)
-        return await self.productRepository.add_product(name, category_id)
+        return await self.productRepository.add_product(name, category_id, price)
 
     async def delete_product(self, id: int) -> ProductModel:
         """
