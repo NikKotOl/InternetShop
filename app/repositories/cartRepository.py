@@ -36,7 +36,7 @@ class CartRepository:
         await self.session.delete(cart)
         return cart
 
-    async def get_carts_by_user_id(self, user_id: int) -> Sequence[CartModel]:
+    async def get_cart_by_user_id(self, user_id: int) -> Sequence[CartModel]:
         stmt = select(CartModel).where(CartModel.user_id == user_id)
         carts = await self.session.execute(stmt)
         return carts.scalars().all()
