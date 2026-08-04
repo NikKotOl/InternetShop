@@ -16,7 +16,7 @@ class OrderModel(Base):
 
 
 class OrderItemModel(Base):
-    __tablename__ = "order_items"
+    __tablename__ = "order_item"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     order_id: Mapped[int] = mapped_column(ForeignKey("orders.id", ondelete="CASCADE"))
