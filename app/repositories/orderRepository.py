@@ -1,5 +1,5 @@
 from decimal import Decimal
-from typing import Sequence
+from typing import Optional, Sequence
 
 from sqlalchemy import Row, select
 
@@ -39,11 +39,37 @@ class OrderRepository:
 
     async def get_order_by_id(
         self, order_id: int
-    ) -> Sequence[Row[tuple[OrderItemModel, OrderModel]]]:
+    ) -> Optional[tuple[OrderModel, list[OrderItemModel]]]:
         stmt = (
             select(OrderItemModel, OrderModel)
             .join(OrderModel, OrderModel.id == OrderItemModel.order_id)
             .where(OrderModel.id == order_id)
         )
         response = await self.session.execute(stmt)
-        return response.all()
+        rows = response.all()
+        if not rows:
+            return None
+        grouped: tuple[OrderModel, list[OrderItemModel]] = (rows[0][1], [])
+        for order_item, order in rows:
+            grouped[1].append(order_item)
+        return grouped
+
+    async def get_orders_by_user_id(
+        self, user_id: int
+    ) -> list[tuple[OrderModel, list[OrderItemModel]]]:
+        stmt = (
+            select(OrderItemModel, OrderModel)
+            .join(OrderModel, OrderModel.id == OrderItemModel.order_id)
+            .where(OrderModel.user_id == user_id)
+        )
+        response = await self.session.execute(stmt)
+        rows = response.all()
+
+        grouped: dict[int, tuple[OrderModel, list[OrderItemModel]]] = {}
+
+        for order_item, order in rows:
+            if order.id not in grouped:
+                grouped[order.id] = (order, [])
+            grouped[order.id][1].append(order_item)
+
+        return list(grouped.values())
