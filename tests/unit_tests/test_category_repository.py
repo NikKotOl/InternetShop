@@ -42,7 +42,6 @@ async def test_delete_category_success(session, category_repository):
     result = await category_repository.delete_category(1)
 
     session.delete.assert_called_once_with(category)
-    session.commit.assert_called_once()
 
     assert result == category
 
@@ -72,8 +71,7 @@ async def test_add_category(session, category_repository):
     added_category = session.add.call_args[0][0]
     assert added_category.name == "name"
 
-    session.commit.assert_called_once()
-    session.refresh.assert_called_once_with(added_category)
+    session.flush.assert_called_once()
 
     assert result is added_category
     assert result.name == "name"
