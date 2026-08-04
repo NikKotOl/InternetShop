@@ -47,7 +47,12 @@ async def setup_database(test_engine):
 async def override_get_db(test_async_session):
     async def _get_test_db():
         async with test_async_session() as session:
-            yield session
+            try:
+                yield session
+                await session.commit()
+            except Exception:
+                await session.rollback()
+                raise
 
     application.dependency_overrides[get_db] = _get_test_db
     yield
