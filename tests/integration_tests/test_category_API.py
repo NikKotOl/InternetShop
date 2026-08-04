@@ -53,7 +53,7 @@ async def test_delete_category(client, admin_token):
 
 
 async def test_get_products_by_category_id(client, admin_token):
-    await client.post(
+    name = await client.post(
         "/categories/",
         json={"name": "name"},
         headers={"Authorization": f"Bearer {admin_token}"},
@@ -63,32 +63,32 @@ async def test_get_products_by_category_id(client, admin_token):
         json={"name": "name2"},
         headers={"Authorization": f"Bearer {admin_token}"},
     )
-    await client.post(
+    name1 = await client.post(
         "/products/",
-        json={"name": "name1", "category_id": 1},
+        json={"name": "name1", "category_id": 1, "price": 100},
         headers={"Authorization": f"Bearer {admin_token}"},
     )
     await client.post(
         "/products/",
-        json={"name": "name2", "category_id": 1},
+        json={"name": "name2", "category_id": 1, "price": 100},
         headers={"Authorization": f"Bearer {admin_token}"},
     )
     await client.post(
         "/products/",
-        json={"name": "name3", "category_id": 2},
+        json={"name": "name3", "category_id": 2, "price": 100},
         headers={"Authorization": f"Bearer {admin_token}"},
     )
     await client.post(
         "/products/",
-        json={"name": "name4", "category_id": 1},
+        json={"name": "name4", "category_id": 1, "price": 100},
         headers={"Authorization": f"Bearer {admin_token}"},
     )
 
     products = [
-        {"name": "name1", "category_id": 1, "id": 1},
-        {"name": "name2", "category_id": 1, "id": 2},
-        {"name": "name3", "category_id": 2, "id": 3},
-        {"name": "name4", "category_id": 1, "id": 4},
+        {"name": "name1", "category_id": 1, "price": "100.00", "id": 1},
+        {"name": "name2", "category_id": 1, "price": "100.00", "id": 2},
+        {"name": "name3", "category_id": 2, "price": "100.00", "id": 3},
+        {"name": "name4", "category_id": 1, "price": "100.00", "id": 4},
     ]
 
     response = await client.get(
