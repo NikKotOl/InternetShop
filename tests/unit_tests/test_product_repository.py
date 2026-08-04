@@ -75,7 +75,7 @@ async def test_get_products_by_category_id(session, product_repository):
 
 
 async def test_add_product(session, product_repository):
-    result = await product_repository.add_product("product1", 1)
+    result = await product_repository.add_product("product1", 1, 100)
 
     # Проверяем, что session.add был вызван с правильным объектом
     added_product = session.add.call_args[0][0]
