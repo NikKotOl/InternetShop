@@ -1,6 +1,3 @@
-from datetime import datetime
-from typing import Sequence
-
 from fastapi import APIRouter, Depends
 
 from app.core.dependencies import (
@@ -8,7 +5,6 @@ from app.core.dependencies import (
     get_order_repository,
     get_order_service,
 )
-from app.models.orderModel import OrderModel
 from app.models.userModel import UserModel
 from app.repositories.orderRepository import OrderRepository
 from app.schemas.orderSchemas import OrderResponseSchema, OrderItemResponseSchema
