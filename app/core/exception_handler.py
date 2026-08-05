@@ -20,3 +20,7 @@ def value_error_handler(request: Request, exc: Exception) -> JSONResponse:
 
 def cart_access_denied_error_handler(request: Request, exc: Exception) -> JSONResponse:
     return JSONResponse(status_code=403, content={"detail": str(exc)})
+
+
+def empty_cart_error_handler(request: Request, exc: Exception) -> JSONResponse:
+    return JSONResponse(status_code=409, content={"detail": str(exc)})
