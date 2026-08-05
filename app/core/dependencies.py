@@ -10,9 +10,11 @@ from app.db.database import AsyncSessionLocal
 from app.models.userModel import UserModel
 from app.repositories.cartRepository import CartRepository
 from app.repositories.categoryRepository import CategoryRepository
+from app.repositories.orderRepository import OrderRepository
 from app.repositories.productRepository import ProductRepository
 from app.repositories.userRepository import UserRepository
 from app.services.cartService import CartService
+from app.services.orderService import OrderService
 from app.services.productService import ProductService
 from app.services.userService import UserService
 from app.core.logger import logger
@@ -100,3 +102,16 @@ async def get_cart_service(
     return CartService(
         cart_repository=cart_repository, product_repository=product_repository
     )
+
+
+async def get_order_repository(
+    session: AsyncSession = Depends(get_db),
+) -> OrderRepository:
+    return OrderRepository(session)
+
+
+async def get_order_service(
+    order_repository: OrderRepository = Depends(get_order_repository),
+    cart_repository: CartRepository = Depends(get_cart_repository),
+) -> OrderService:
+    return OrderService(order_repository, cart_repository)
