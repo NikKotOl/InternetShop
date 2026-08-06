@@ -49,11 +49,15 @@ async def get_order_by_id(
     )
 
 
-@router.post("/")
+@router.post("/", status_code=201)
 async def create_order(
     user: UserModel = Depends(get_current_user),
     order_service: OrderService = Depends(get_order_service),
 ) -> OrderResponseSchema:
-    order = await order_service.create_order(user.id)
+    order, items = await order_service.create_order(user.id)
     logger.info(f"Created order with id={order.id}")
-    return OrderResponseSchema.model_validate(order)
+    return OrderResponseSchema(
+        id=order.id,
+        created_at=order.created_at,
+        items=[OrderItemResponseSchema.model_validate(i) for i in items],
+    )
