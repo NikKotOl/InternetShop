@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 
-from app.core.dependencies import get_user_service
+from app.core.dependencies import get_current_user, get_user_service
+from app.models.userModel import UserModel
 from app.schemas.tokenSchemas import TokenResponseSchema
 from app.schemas.userSchemas import (
     UserCreateSchema,
@@ -36,3 +37,8 @@ async def login(
 
     token = create_access_token(user.id)
     return TokenResponseSchema(access_token=token, token_type="bearer")
+
+
+@router.get("/me")
+async def get_user(user: UserModel = Depends(get_current_user)) -> UserResponseSchema:
+    return UserResponseSchema.model_validate(user)
