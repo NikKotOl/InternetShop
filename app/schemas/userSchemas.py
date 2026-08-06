@@ -13,6 +13,7 @@ class UserResponseSchema(UserSchema):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    is_admin: bool = Field(default=False)
 
 
 class UserLoginSchema(UserSchema):

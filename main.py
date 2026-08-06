@@ -8,6 +8,7 @@ from app.api.categoryAPI import router as categoryRouter
 from app.api.productAPI import router as productRouter
 from app.api.userAPI import router as userRouter
 from app.api.cartAPI import router as cartRouter
+from app.api.orderAPI import router as orderRouter
 from app.core.exception_handler import (
     already_exists_error_handler,
     cart_access_denied_error_handler,
@@ -55,6 +56,7 @@ application.include_router(categoryRouter)
 application.include_router(productRouter)
 application.include_router(userRouter)
 application.include_router(cartRouter)
+application.include_router(orderRouter)
 application.add_exception_handler(NotFoundError, not_found_error_handler)
 application.add_exception_handler(AlreadyExistsError, already_exists_error_handler)
 application.add_exception_handler(
