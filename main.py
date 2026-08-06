@@ -11,6 +11,7 @@ from app.api.cartAPI import router as cartRouter
 from app.core.exception_handler import (
     already_exists_error_handler,
     cart_access_denied_error_handler,
+    empty_cart_error_handler,
     invalid_credentials_error_handler,
     not_found_error_handler,
     value_error_handler,
@@ -18,6 +19,7 @@ from app.core.exception_handler import (
 from app.core.exceptions import (
     AlreadyExistsError,
     CartAccessDeniedError,
+    EmptyCartError,
     InvalidCredentialsError,
     NotFoundError,
 )
@@ -62,6 +64,7 @@ application.add_exception_handler(ValueError, value_error_handler)
 application.add_exception_handler(
     CartAccessDeniedError, cart_access_denied_error_handler
 )
+application.add_exception_handler(EmptyCartError, empty_cart_error_handler)
 
 
 if __name__ == "__main__":

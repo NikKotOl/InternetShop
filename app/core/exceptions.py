@@ -65,8 +65,14 @@ class InvalidQuantityError(ValueError):
 
 
 class CartNotFoundError(NotFoundError):
-    def __init__(self, id: int):
-        self.message = f"Cart with id={id} not found"
+    def __init__(self, cart_id: int):
+        self.message = f"Cart with id={cart_id} not found"
+        super().__init__(self.message)
+
+
+class OrderNotFoundError(NotFoundError):
+    def __init__(self, order_id: int):
+        self.message = f"Order with id={order_id} not found"
         super().__init__(self.message)
 
 
@@ -74,3 +80,9 @@ class CartAccessDeniedError(Exception):
     def __init__(self, cart_id: int):
         self.cart_id = cart_id
         super().__init__(f"Access denied to cart item {cart_id}")
+
+
+class EmptyCartError(Exception):
+    def __init__(self, user_id: int):
+        self.message = f"Cart for user_id={user_id} is empty"
+        super().__init__(self.message)

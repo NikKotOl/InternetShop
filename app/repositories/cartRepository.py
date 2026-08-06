@@ -19,13 +19,13 @@ class CartRepository:
     async def add_cart(self, user_id: int, product_id: int, quantity: int) -> CartModel:
         new_cart = CartModel(user_id=user_id, product_id=product_id, quantity=quantity)
         self.session.add(new_cart)
-        await self.session.commit()
+        await self.session.flush()
         await self.session.refresh(new_cart)
         return new_cart
 
     async def quantity_update(self, cart: CartModel, quantity: int) -> CartModel:
         cart.quantity = quantity
-        await self.session.commit()
+        await self.session.flush()
         await self.session.refresh(cart)
         return cart
 
@@ -34,10 +34,9 @@ class CartRepository:
         if not cart:
             return None
         await self.session.delete(cart)
-        await self.session.commit()
         return cart
 
-    async def get_carts_by_user_id(self, user_id: int) -> Sequence[CartModel]:
+    async def get_cart_by_user_id(self, user_id: int) -> Sequence[CartModel]:
         stmt = select(CartModel).where(CartModel.user_id == user_id)
         carts = await self.session.execute(stmt)
         return carts.scalars().all()

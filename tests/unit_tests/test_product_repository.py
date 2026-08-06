@@ -40,7 +40,6 @@ async def test_delete_product(session, product_repository):
     result = await product_repository.delete_product(product1)
 
     session.delete.assert_called_once_with(product1)
-    session.commit.assert_called_once()
 
     assert result == product1
 
@@ -83,7 +82,7 @@ async def test_add_product(session, product_repository):
     assert added_product.category_id == 1
 
     # Проверяем, что commit и refresh вызывались
-    session.commit.assert_called_once()
+    session.flush.assert_called_once()
     session.refresh.assert_called_once_with(added_product)
 
     # Проверяем, что вернулся тот же объект, который передавали в add/refresh

@@ -36,18 +36,15 @@ class CategoryRepository:
         new_category = CategoryModel(name=name)
         self.session.add(new_category)
         try:
-            await self.session.commit()
+            await self.session.flush()
         except IntegrityError:
-            await self.session.rollback()
             raise CategoryAlreadyExistsError(name)
-        await self.session.refresh(new_category)
         return new_category
 
     async def delete_category(self, id: int) -> Optional[CategoryModel]:
         deleted_category = await self.session.get(CategoryModel, id)
         if deleted_category:
             await self.session.delete(deleted_category)
-            await self.session.commit()
             return deleted_category
         else:
             return None

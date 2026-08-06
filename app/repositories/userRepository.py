@@ -30,6 +30,6 @@ class UserRepository:
     async def add_user(self, username: str, password_hash: str) -> UserModel:
         new_user = UserModel(username=username, password_hash=password_hash)
         self.session.add(new_user)
-        await self.session.commit()
+        await self.session.flush()
         await self.session.refresh(new_user)
         return new_user
