@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from sqlalchemy import text
 
@@ -44,6 +45,17 @@ async def lifespan(app: FastAPI):
 
 
 application = FastAPI(lifespan=lifespan)
+
+
+application.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "*"
+    ],  # для портфолио-проекта ок; в реальном проде указывали бы конкретный домен фронтенда
+    allow_credentials=False,  # у тебя Bearer-токен, не cookie — credentials не нужны
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @application.get("/", summary="Start page")
