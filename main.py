@@ -67,5 +67,10 @@ application.add_exception_handler(
 application.add_exception_handler(EmptyCartError, empty_cart_error_handler)
 
 
-if __name__ == "__main__":
-    uvicorn.run("main:application", host="127.0.0.1", port=8080, reload=True)
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
+
+BASE_DIR = Path(__file__).resolve().parent
+application.mount(
+    "/", StaticFiles(directory=BASE_DIR / "static", html=True), name="static"
+)
