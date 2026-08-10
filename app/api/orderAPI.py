@@ -12,8 +12,8 @@ from app.services.orderService import OrderService
 from app.core.logger import logger
 
 router = APIRouter(
-    prefix="/order",
-    tags=["order"],
+    prefix="/orders",
+    tags=["orders"],
 )
 
 
