@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from sqlalchemy import text
 
@@ -8,6 +9,7 @@ from app.api.categoryAPI import router as categoryRouter
 from app.api.productAPI import router as productRouter
 from app.api.userAPI import router as userRouter
 from app.api.cartAPI import router as cartRouter
+from app.api.orderAPI import router as orderRouter
 from app.core.exception_handler import (
     already_exists_error_handler,
     cart_access_denied_error_handler,
@@ -45,6 +47,17 @@ async def lifespan(app: FastAPI):
 application = FastAPI(lifespan=lifespan)
 
 
+application.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "*"
+    ],  # для портфолио-проекта ок; в реальном проде указывали бы конкретный домен фронтенда
+    allow_credentials=False,  # у тебя Bearer-токен, не cookie — credentials не нужны
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 @application.get("/", summary="Start page")
 def starter_page() -> dict[str, str]:
     logger.info("GET /")
@@ -55,6 +68,7 @@ application.include_router(categoryRouter)
 application.include_router(productRouter)
 application.include_router(userRouter)
 application.include_router(cartRouter)
+application.include_router(orderRouter)
 application.add_exception_handler(NotFoundError, not_found_error_handler)
 application.add_exception_handler(AlreadyExistsError, already_exists_error_handler)
 application.add_exception_handler(
