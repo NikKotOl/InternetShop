@@ -58,12 +58,6 @@ application.add_middleware(
 )
 
 
-@application.get("/", summary="Start page")
-def starter_page() -> dict[str, str]:
-    logger.info("GET /")
-    return {"success": "true"}
-
-
 application.include_router(categoryRouter)
 application.include_router(productRouter)
 application.include_router(userRouter)
