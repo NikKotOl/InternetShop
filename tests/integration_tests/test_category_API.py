@@ -53,7 +53,7 @@ async def test_delete_category(client, admin_token):
 
 
 async def test_get_products_by_category_id(client, admin_token):
-    name = await client.post(
+    await client.post(
         "/categories/",
         json={"name": "name"},
         headers={"Authorization": f"Bearer {admin_token}"},
@@ -63,7 +63,7 @@ async def test_get_products_by_category_id(client, admin_token):
         json={"name": "name2"},
         headers={"Authorization": f"Bearer {admin_token}"},
     )
-    name1 = await client.post(
+    await client.post(
         "/products/",
         json={"name": "name1", "category_id": 1, "price": 100},
         headers={"Authorization": f"Bearer {admin_token}"},

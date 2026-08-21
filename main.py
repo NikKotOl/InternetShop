@@ -26,8 +26,6 @@ from app.core.exceptions import (
     NotFoundError,
 )
 
-import uvicorn
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -45,6 +43,11 @@ async def lifespan(app: FastAPI):
 
 
 application = FastAPI(lifespan=lifespan)
+
+
+@application.get("/health")
+async def health():
+    return {"status": "ok"}
 
 
 application.add_middleware(

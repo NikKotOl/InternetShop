@@ -3,7 +3,6 @@ from unittest.mock import Mock
 import pytest
 
 from app.core.dependencies import AsyncSession
-from app.core.exceptions import CategoryNotFoundError
 from app.models.categoryModel import CategoryModel
 from app.repositories.categoryRepository import CategoryRepository
 

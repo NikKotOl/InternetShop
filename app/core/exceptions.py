@@ -54,7 +54,7 @@ class CategoryAlreadyExistsError(AlreadyExistsError):
 
 class InvalidCredentialsError(Exception):
     def __init__(self):
-        self.message = f"Invalid credentials"
+        self.message = "Invalid credentials"
         super().__init__(self.message)
 
 

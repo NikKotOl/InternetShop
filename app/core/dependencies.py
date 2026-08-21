@@ -1,10 +1,11 @@
 from fastapi import Depends, HTTPException
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from jwt import ExpiredSignatureError, InvalidTokenError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import UserNotFoundError
+from app.core.logger import logger
 from app.core.security import decode_access_token
 from app.db.database import AsyncSessionLocal
 from app.models.userModel import UserModel
@@ -17,7 +18,6 @@ from app.services.cartService import CartService
 from app.services.orderService import OrderService
 from app.services.productService import ProductService
 from app.services.userService import UserService
-from app.core.logger import logger
 
 http_bearer = HTTPBearer()
 
