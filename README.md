@@ -92,7 +92,7 @@ uv run pytest
 ```
 
 ## API Documentation
-Swagger UI available at `https://internetshop-j1ep.onrender.com`
+Demo: deployment is currently unavailable. The project can be run locally with Docker.
 
 ## What This Project Demonstrates
 - Clean architecture separation (Repository → Service → Router)
